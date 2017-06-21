@@ -93,6 +93,7 @@
                 <div ng-repeat="imageUrl in imageUrls">{{imageUrl}}
                     <input type="button" ng-click="removeImage(imageUrl)" value="remove">
                 </div>
+                <br>
                 <div style="clear:both"></div>
                 <div style="float:left; margin-right: 20px;">
                     <div class="modal-heading">Public channel:</div>
@@ -125,7 +126,9 @@
                         </td>
                     </tr>
                 </table>
-                <div class="modal-heading">Description:</div><textarea ng-model="postData.description"></textarea>
+                <br>
+                <div class="modal-heading">Description:</div>
+                <textarea style="width: 100%;" ng-model="postData.description"></textarea>
                 <table>
                     <tr>
                         <td>
@@ -222,7 +225,7 @@
 
             </div>
             <div class="modal-footer">
-              <button class="btn btn-success" ng-click="post()" ng-disabled="loading">DONE</button>
+              <button class="btn btn-success" ng-click="post()" ng-disabled="loading">BROADCAST</button>
             </div>
           </div>
     </div>
