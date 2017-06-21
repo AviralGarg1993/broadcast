@@ -16,6 +16,7 @@
             padding-top: 25px;
             margin: 10px;
         }
+
         .dragover {
             border: 5px dashed blue;
         }
@@ -70,6 +71,35 @@
         .modal-footer {
             text-align: center;
         }
+
+        img:hover{
+            cursor: pointer;
+        }
+
+        ::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar
+        {
+            width: 12px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb
+        {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+
+        .scroll-bar
+        {
+            overflow: auto;
+        }
     </style>
 </head>
 
@@ -82,10 +112,11 @@
         <div modal="showModal" close="cancel()">
             <button style="margin-top: 2%" type="button" class="close" ng-click="cancel()" aria-label="Close">&times;</button>
             <div class="modal-header">
-                <img class="logo" src="img/application_logo_small.png"/>
+                <img class="logo" src="img/application_logo.png"/>
                 <h6 style='text-align:left;'>BROADCAST THIS ITEM</h6>
             </div>
-            <div class="modal-body" style="text-align: left;">
+            <div class="modal-body scroll-bar" style="text-align: left;">
+
                 <div ngf-drop ngf-select ng-model="files" class="drop-box" ng-disabled="loading"
                 ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
                 accept="image/*" ngf-pattern="'image/*'">Drop images here or click to upload</div>
@@ -97,23 +128,26 @@
                 <div style="clear:both"></div>
                 <div style="float:left; margin-right: 20px;">
                     <div class="modal-heading">Public channel:</div>
-                    <select ng-model="publicChannel" ng-change="changeRoomId()">
+                    <select ng-model="publicChannel" ng-change="changeRoomIdToPublic()">
                         <option ng-repeat="channel in publicChannels"
                                 value="{{channel.id}}">
                           {{channel.name}}
                         </option>
                     </select>
                 </div>
+                OR
+                <!-- TODO: styling issue-->
                 <div>
                     <div class="modal-heading">Private channel:</div>
-                    <select ng-model="privateChannel" ng-change="changeRoomId()">
-                        <option ng-repeat="channel in privatehannels"
+                    <select ng-model="privateChannel" ng-change="changeRoomIdToPrivate()">
+                        <option ng-repeat="channel in privateChannels"
                                 value="{{channel.roomId}}">
                           {{channel.participantFirstName}} {{channel.participantLastName}}
                         </option>
                     </select>
                 </div>
                 <table>
+                    <!-- redundant
                     <tr>
                         <td>
                             <div class="modal-heading">is Broadcast:
@@ -125,6 +159,7 @@
                                 <input type="checkbox" ng-model="postData.privateMessage" ng-change="changeRoomId()" style="margin: 0 0 0 5px;"></div>
                         </td>
                     </tr>
+                    -->
                 </table>
                 <br>
                 <div class="modal-heading">Description:</div>
@@ -222,7 +257,6 @@
                     </tr>
                 </table>
 
-
             </div>
             <div class="modal-footer">
               <button class="btn btn-success" ng-click="post()" ng-disabled="loading">BROADCAST</button>
@@ -315,12 +349,14 @@
                 console.log($scope.imageUrls);
             };
 
-            $scope.changeRoomId = function() {
-                if($scope.postData.privateMessage) {
-                    $scope.postData.roomId = $scope.privateChannel;
-                } else {
-                    $scope.postData.roomId = $scope.publicChannel;
-                }
+            $scope.changeRoomIdToPrivate = function() {
+                $scope.postData.roomId = $scope.privateChannel;
+                //TODO: set public channel select to null for good UX
+            };
+
+            $scope.changeRoomIdToPublic = function() {
+                $scope.postData.roomId = $scope.publicChannel;
+                //TODO: set private channel select to null for good UX
             };
 
             $scope.post = function() {
@@ -345,6 +381,15 @@
             };
 
             $scope.$watch('files', function () {
+                /* TODO: hopefully this change of
+                 *          code doesn't break code
+                 */
+
+                /* calling it inside post function above
+                 * to not get 'select channel errors' every
+                 * time image is uploaded
+                 */
+
                 //$scope.upload($scope.files);
             });
             $scope.$watch('file', function () {
