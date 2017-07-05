@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="bootstrap.min.css">
     <script src="js/test-directives.js"></script>
     <style type="text/css">
+
+        /*
+         * Map Division
+         *
+         */
+
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        /*
+         * End of Map Division
+         *
+         */
+
+
         .drop-box {
             background: #F8F8F8;
             border: 5px dashed #DDD;
@@ -266,8 +282,6 @@
             </div>
           </div>
     </div>
-
-
     <script>
         var app = angular.module('myApp', ['test-directives', 'ngFileUpload', 'ui.bootstrap.modal']);
      
@@ -275,6 +289,21 @@
 
             var api_context = "http://localhost:8080/api";//"http://app.automotocast.ca/api";
             var demo_user_id = 27;//4691;
+
+
+            initMap = function() {
+                console.log("yo");
+                var uluru = {lat: -25.363, lng: 131.044};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: uluru
+                });
+                var marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map
+                });
+            };
+
 
             $scope.open = function() {
                 $scope.showModal = true;
@@ -430,6 +459,10 @@
         });    
  
     </script>
+    <script async defer
+                     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwrKm44MgFxSsDeRvblm4IO1h7KSMf0QE&callback=initMap">
+    </script>
+
 
 </body>
 </html>
